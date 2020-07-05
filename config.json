@@ -1,0 +1,401 @@
+{
+    "name": "BT-MQTT Gateway",
+    "version": "1",
+    "slug": "bt-mqtt-gateway",
+    "description": "Bluetooth to MQTT Gateway",
+    "arch": ["armhf", "armv7", "aarch64", "amd64", "i386"],
+    "url": "https://github.com/SoulEater45/hassio-bt-mqtt-gateway",
+    "startup": "before",
+    "boot": "auto",
+    "map": ["ssl"],
+    "options": {
+        "mqtt": {
+            "host": "192.168.1.1",
+            "port": 1883,
+            "username": "user",
+            "password": "password",
+            "ca_cert": "/etc/ssl/certs/ca-certificates.crt",
+            "ca_verify": false,
+            "topic_prefix": "hostname",
+            "client_id": "bt-mqtt-gateway",
+            "availability_topic": "lwt_topic"
+        },
+        "manager": {
+            "sensor_config": {
+                "topic": "homeassistant",
+                "retain": true
+            },
+            "topic_subscription": {
+                "update_all": {
+                    "topic": "homeassistant/status",
+                    "payload": "online"
+                }
+            },
+            "command_timeout": 35,
+            "workers": {
+                "mysensors": {
+                    "command_timeout": 35,
+                    "args": {
+                        "port": "/dev/ttyUSB0",
+                        "baudrate": 9600,
+                        "topic_prefix": "mysensors/out"
+                    }
+                },
+                "thermostat": {
+                    "args": {
+                        "devices": {
+                            "bedroom": 12041062,
+                            "living_room": {
+                                "mac": 12041062,
+                                "discovery_temperature_topic": "some/sensor/with/temperature",
+                                "discovery_temperature_template": "{{ value_json.temperature }}"
+                            }
+                        },
+                        "topic_prefix": "thermostat"
+                    },
+                    "topic_subscription": "thermostat/+/+/set",
+                    "update_interval": 60
+                },
+                "miscale": {
+                    "args": {
+                        "mac": 12041062,
+                        "topic_prefix": "miscale",
+                        "users": {
+                            "Alex": {
+                                "weight_template": {
+                                    "min": 70,
+                                    "max": 90
+                                },
+                                "sex": "male",
+                                "height": 185,
+                                "dob": "2000-01-11"
+                            },
+                            "Olivia": {
+                                "weight_template": {
+                                    "min": 30,
+                                    "max": 60
+                                },
+                                "sex": "female",
+                                "height": 165,
+                                "dob": "2000-02-22"
+                            }
+                        }
+                    },
+                    "update_interval": 1800
+                },
+                "linakdesk": {
+                    "args": {
+                        "mac": 12041062,
+                        "topic_prefix": "linak_desk"
+                    },
+                    "update_interval": 1800
+                },
+                "miflora": {
+                    "args": {
+                        "devices": {
+                            "herbs": 12041062
+                        },
+                        "topic_prefix": "miflora",
+                        "per_device_timeout": 6
+                    },
+                    "update_interval": 300
+                },
+                "mithermometer": {
+                    "args": {
+                        "devices": {
+                            "living_room": 12041062
+                        },
+                        "topic_prefix": "mithermometer",
+                        "per_device_timeout": 6
+                    },
+                    "update_interval": 300
+                },
+                "blescanmulti": {
+                    "args": {
+                        "devices": {
+                            "beacon": 12041062,
+                            "smartwath": 12041062
+                        },
+                        "topic_prefix": "blescan",
+                        "available_payload": "home",
+                        "unavailable_payload": "not_home",
+                        "available_timeout": 0,
+                        "unavailable_timeout": 60,
+                        "scan_timeout": 10,
+                        "scan_passive": true
+                    },
+                    "update_interval": 60
+                },
+                "toothbrush": {
+                    "args": {
+                        "devices": {
+                            "ix": 12041062,
+                            "ia": "11:22:33:44:55:66"
+                        },
+                        "topic_prefix": "toothbrush"
+                    },
+                    "update_interval": 10
+                },
+                "toothbrush_homeassistant": {
+                    "args": {
+                        "autodiscovery_prefix": "homeassistant",
+                        "topic_prefix": "toothbrush",
+                        "devices": {
+                            "ix": {
+                                "name": "IX",
+                                "mac": 12041062
+                            },
+                            "ia": {
+                                "name": "IA",
+                                "mac": "11:22:33:44:55:66"
+                            }
+                        }
+                    },
+                    "update_interval": 10
+                },
+                "switchbot": {
+                    "args": {
+                        "devices": {
+                            "heater": 12041062
+                        },
+                        "topic_prefix": "switchbot/bathroom",
+                        "state_topic_prefix": "switchbot/bathroom"
+                    },
+                    "topic_subscription": "switchbot/+/+/set",
+                    "update_interval": 60
+                },
+                "smartgadget": {
+                    "args": {
+                        "devices": {
+                            "living_room": 12041062
+                        },
+                        "topic_prefix": "smartgadget"
+                    },
+                    "update_interval": 300
+                },
+                "ruuvitag": {
+                    "args": {
+                        "devices": {
+                            "basement": 12041062
+                        },
+                        "topic_prefix": "ruuvitag"
+                    },
+                    "update_interval": 60
+                },
+                "lywsd02": {
+                    "args": {
+                        "devices": {
+                            "living_room": 12041062
+                        },
+                        "topic_prefix": "mijasensor"
+                    },
+                    "update_interval": 120
+                },
+                "lywsd03mmc": {
+                    "args": {
+                        "devices": {
+                            "bathroom": 12041062
+                        },
+                        "topic_prefix": "mijasensor_gen2"
+                    },
+                    "update_interval": 120
+                }
+            }
+        }
+    },
+    "schema": {
+        "mqtt": {
+            "host": "str",
+            "port": "int",
+            "username": "str?",
+            "password": "str?",
+            "ca_cert": "str?",
+            "ca_verify": "bool?",
+            "topic_prefix": "str",
+            "client_id": "str",
+            "availability_topic": "str"
+        },
+        "manager": {
+            "sensor_config": {
+                "topic": "str",
+                "retain": "bool"
+            },
+            "topic_subscription": {
+                "update_all": {
+                    "topic": "str",
+                    "payload": "str"
+                }
+            },
+            "command_timeout": "int",
+            "workers": {
+                "mysensors": {
+                    "command_timeout": "int?",
+                    "args": {
+                        "port": "str?",
+                        "baudrate": "int?",
+                        "topic_prefix": "str?"
+                    }
+                },
+                "thermostat": {
+                    "args": {
+                        "devices": {
+                            "bedroom": "str?",
+                            "living_room": {
+                                "mac": "str?",
+                                "discovery_temperature_topic": "str?",
+                                "discovery_temperature_template": "str?"
+                            }
+                        },
+                        "topic_prefix": "str?"
+                    },
+                    "topic_subscription": "str?",
+                    "update_interval": "int?"
+                },
+                "miscale": {
+                    "args": {
+                        "mac": "str?",
+                        "topic_prefix": "str?",
+                        "users": {
+                            "Alex": {
+                                "weight_template": {
+                                    "min": "int?",
+                                    "max": "int?"
+                                },
+                                "sex": "str?",
+                                "height": "int?",
+                                "dob": "str?"
+                            },
+                            "Olivia": {
+                                "weight_template": {
+                                    "min": "int?",
+                                    "max": "int?"
+                                },
+                                "sex": "str?",
+                                "height": "int?",
+                                "dob": "str?"
+                            }
+                        }
+                    },
+                    "update_interval": "int?"
+                },
+                "linakdesk": {
+                    "args": {
+                        "mac": "str?",
+                        "topic_prefix": "str?"
+                    },
+                    "update_interval": "int?"
+                },
+                "miflora": {
+                    "args": {
+                        "devices": {
+                            "herbs": "str?"
+                        },
+                        "topic_prefix": "str?",
+                        "per_device_timeout": "int?"
+                    },
+                    "update_interval": "int?"
+                },
+                "mithermometer": {
+                    "args": {
+                        "devices": {
+                            "living_room": "str?"
+                        },
+                        "topic_prefix": "str?",
+                        "per_device_timeout": "int?"
+                    },
+                    "update_interval": "int?"
+                },
+                "blescanmulti": {
+                    "args": {
+                        "devices": {
+                            "beacon": "str?",
+                            "smartwath": "str?"
+                        },
+                        "topic_prefix": "str?",
+                        "available_payload": "str?",
+                        "unavailable_payload": "str?",
+                        "available_timeout": "int?",
+                        "unavailable_timeout": "int?",
+                        "scan_timeout": "int?",
+                        "scan_passive": "bool?"
+                    },
+                    "update_interval": "int?"
+                },
+                "toothbrush": {
+                    "args": {
+                        "devices": {
+                            "ix": "str?",
+                            "ia": "str?"
+                        },
+                        "topic_prefix": "str?"
+                    },
+                    "update_interval": "int?"
+                },
+                "toothbrush_homeassistant": {
+                    "args": {
+                        "autodiscovery_prefix": "str?",
+                        "topic_prefix": "str?",
+                        "devices": {
+                            "ix": {
+                                "name": "str?",
+                                "mac": "str?"
+                            },
+                            "ia": {
+                                "name": "str?",
+                                "mac": "str?"
+                            }
+                        }
+                    },
+                    "update_interval": "int?"
+                },
+                "switchbot": {
+                    "args": {
+                        "devices": {
+                            "heater": "str?"
+                        },
+                        "topic_prefix": "str?",
+                        "state_topic_prefix": "str?"
+                    },
+                    "topic_subscription": "str?",
+                    "update_interval": "int?"
+                },
+                "smartgadget": {
+                    "args": {
+                        "devices": {
+                            "living_room": "str?"
+                        },
+                        "topic_prefix": "str?"
+                    },
+                    "update_interval": "int?"
+                },
+                "ruuvitag": {
+                    "args": {
+                        "devices": {
+                            "basement": "str?"
+                        },
+                        "topic_prefix": "str?"
+                    },
+                    "update_interval": "int?"
+                },
+                "lywsd02": {
+                    "args": {
+                        "devices": {
+                            "living_room": "str?"
+                        },
+                        "topic_prefix": "str?"
+                    },
+                    "update_interval": "int?"
+                },
+                "lywsd03mmc": {
+                    "args": {
+                        "devices": {
+                            "bathroom": "str?"
+                        },
+                        "topic_prefix": "str?"
+                    },
+                    "update_interval": "int?"
+                }
+            }
+        }
+    }
+}

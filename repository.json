@@ -1,0 +1,5 @@
+{
+    "name": "Bluetooth to MQTT Hass.io Add-on",
+    "url": "https://github.com/SoulEater45/hassio-bt-mqtt-gateway",
+    "maintainer": "Mirza Arnaut <mirza.arnaut45@gmail.com>"
+  }

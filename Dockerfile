@@ -1,5 +1,7 @@
 FROM python:3.8-alpine3.11
 
+LABEL io.hass.version="0.0.1" io.hass.type="addon" io.hass.arch="armhf|aarch64|i386|amd64"
+
 ENV DEBUG false
 
 RUN mkdir application
